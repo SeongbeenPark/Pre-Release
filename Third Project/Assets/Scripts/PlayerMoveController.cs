@@ -28,7 +28,7 @@ public class PlayerMoveController : MonoBehaviour
     private void PlayerMove()
     {
         playerPosition.x += x * speed * Time.deltaTime;
-        playerPosition.x = Mathf.Clamp(playerPosition.x, -3f, 3f);          //플레이어의 이동범위 제한
+        playerPosition.x = Mathf.Clamp(playerPosition.x, -4f, 4f);          //플레이어의 이동범위 제한
         transform.position = playerPosition;
     }
 }

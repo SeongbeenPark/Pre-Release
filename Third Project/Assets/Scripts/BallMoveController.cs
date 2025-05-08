@@ -8,9 +8,17 @@ public class BallMoveController : MonoBehaviour
     private Vector2 ballDirection;                  //공의 이동 방향
     private bool isBallReleased = false;            //공이 플레이어에서 떨어졌는지 판단
 
+    CircleCollider2D cc;
+    GameObject temp;
+    bool isDel = false;
+    int count = 0;
+    private Vector2 ballPos;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        cc = GetComponent<CircleCollider2D>();
         ballDirection = Vector2.up.normalized;      //초기 공 이동 방향 설정
     }
 
@@ -54,5 +62,194 @@ public class BallMoveController : MonoBehaviour
             float angle = (hitPoint - playerCenter) * 2.0f;
             ballDirection = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle)).normalized;
         }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Block"))
+        {
+            RemoveBrick(collision.gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Out"))
+        {
+            isBallReleased = false;
+        }
+    }
+
+    void RemoveBrick(GameObject brick)
+    {
+        if (count >= 2)
+        {
+            count = 0;
+            return;
+        }
+
+        ballPos = transform.position;
+        Vector2 pos = Vector2.zero;
+
+        Collider2D[] col = Physics2D.OverlapCircleAll(ballPos, cc.radius / 2, LayerMask.GetMask("Block"));
+
+        count = col.Length;
+
+        GameObject[] colObj = new GameObject[col.Length];
+
+        float[] p = new float[2];
+
+        if (col.Length == 3)
+        {
+            int sour = 0;
+
+            if (ballDirection.y >= 0)
+            {
+                if (ballDirection.x >= 0)
+                    {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (col[i].transform.position.x >= ballPos.x && col[i].transform.position.y >= ballPos.y)
+                        {
+                            sour = i;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (col[i].transform.position.x < ballPos.x && col[i].transform.position.y >= ballPos.y)
+                        {
+                            sour = i;
+                        }
+                    }
+                }
+            }
+            else //아래로 이동
+            {
+                if (ballDirection.x >= 0) //오른쪽 이동
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (col[i].transform.position.x >= ballPos.x && col[i].transform.position.y < ballPos.y)
+                        {
+                            sour = i;
+                        }
+                    }
+                }
+                else //왼쪽 이동
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (col[i].transform.position.x < ballPos.x && col[i].transform.position.y < ballPos.y)
+                        {
+                            sour = i;
+                        }
+                    }
+                }
+            }
+            int cnt = 0;
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (i != sour)
+                {
+                    p[cnt] = Vector2.Distance(ballPos, col[i].transform.position);
+
+                    colObj[cnt] = col[i].gameObject;
+
+                    cnt++;
+                }
+            }
+            if (p[0] <= p[1]) temp = colObj[0];
+            else temp = colObj[1];
+        }
+        else if (col.Length == 2)
+        {
+            colObj[0] = col[0].gameObject;
+            colObj[1] = col[1].gameObject;
+
+            p[0] = Vector2.Distance(ballPos, colObj[0].transform.position);
+            p[1] = Vector2.Distance(ballPos, colObj[1].transform.position);
+
+            if (p[0] <= p[1]) temp = colObj[0];
+            else temp = colObj[1];
+        }
+        else temp = brick;
+
+        BoxCollider2D bc = temp.GetComponent<BoxCollider2D>();
+
+        if (col.Length > 1)
+        {
+            if (colObj[0].transform.position.y == colObj[1].transform.position.y)
+            {
+                if (ballDirection.y >= 0) pos = Vector2.down;
+                else pos = Vector2.up;  
+            }
+            else if (colObj[0].transform.position.x == colObj[1].transform.position.x)
+            {
+                if (ballDirection.x >= 0) pos = Vector2.left;
+                else pos = Vector2.right;
+            }
+            else
+            {
+                isDel = true;
+
+                if (ballDirection.y >= 0)
+                {
+                    if (ballDirection.x >= 0) pos = (Vector2.left + Vector2.down).normalized;
+                    else pos = (Vector2.right + Vector2.down).normalized;
+                }
+                else
+                {
+                    if (ballDirection.x >= 0) pos = (Vector2.left + Vector2.up).normalized;
+                    else pos = (Vector2.right + Vector2.up).normalized ;
+                }
+            }
+        }
+        else
+        {
+            if (ballDirection.y >= 0)
+            {
+                if (temp.transform.position.x - (bc.size.x / 2) > ballPos.x && ballDirection.x >= 0)
+                {
+                    pos = Vector2.left;
+                }
+                else if (temp.transform.position.x + (bc.size.x / 2) <= ballPos.x && ballDirection.x < 0)
+                {
+                    pos = Vector2.right;
+                }
+                else pos = Vector2.down;
+            }
+            else
+            {
+                if (temp.transform.position.x - (bc.size.x / 2) > ballPos.x && ballDirection.x >= 0)
+                {
+                    pos = Vector2.left;
+                }
+                else if (temp.transform.position.x + (bc.size.x / 2) <= ballPos.x && ballDirection.x < 0)
+                {
+                    pos = Vector2.right;
+                }
+                else pos = Vector2.up;
+            }
+        }
+        StartCoroutine(SetCol());
+
+        ballDirection = Vector2.Reflect(ballDirection, pos);
+
+        if(!isDel) temp.GetComponent<BlockComponent>().TakeDamage();
+        else
+        {
+            colObj[0].GetComponent<BlockComponent>().TakeDamage();
+            colObj[1].GetComponent<BlockComponent>().TakeDamage();
+            isDel = false;
+        }
+
+        temp = null;
+    }
+    IEnumerator SetCol()
+    {
+        cc.enabled = false;
+        yield return new WaitForSeconds(0.005f);
+        cc.enabled = true;
+        count = 0;
     }
 }

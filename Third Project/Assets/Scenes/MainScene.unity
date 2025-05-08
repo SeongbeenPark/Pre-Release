@@ -146,8 +146,8 @@ Transform:
   m_GameObject: {fileID: 4789898}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.2628864, y: 10.1012945, z: -0.025142433}
-  m_LocalScale: {x: 27, y: 0.5, z: 1}
+  m_LocalPosition: {x: 1.34, y: 9.93, z: -0.025142433}
+  m_LocalScale: {x: 27, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1383183530}
@@ -280,8 +280,8 @@ Transform:
   m_GameObject: {fileID: 78718782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.352886, y: 0.48129505, z: -0.025142433}
-  m_LocalScale: {x: 0.5, y: 27.187, z: 1}
+  m_LocalPosition: {x: 8.15, y: 0.48129505, z: -0.025142433}
+  m_LocalScale: {x: 1, y: 27.187, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1383183530}
@@ -516,7 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763f3e0862d813c4e97ca19f60a276a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  speed: 10
 --- !u!70 &163243005
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -581,8 +581,8 @@ Transform:
   m_GameObject: {fileID: 277760596}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.8571134, y: -1.0387049, z: -0.025142433}
-  m_LocalScale: {x: 0.5, y: 27.187, z: 1}
+  m_LocalPosition: {x: -6.61, y: -1.0387049, z: -0.025142433}
+  m_LocalScale: {x: 1, y: 27.187, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1383183530}
@@ -994,7 +994,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.05, y: -4.39, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1074,7 +1074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf498c0d1e1b54a458474aec90d829b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballspeed: 10
+  ballspeed: 20
 --- !u!1 &661093075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1227,10 +1227,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   block: {fileID: 2152877108694091702, guid: 4571fb58b93599440a1a401f20c6b6bb, type: 3}
-  pos: {x: -3.19, y: 2.25}
+  pos: {x: -6, y: 5}
   offset: {x: 0.535, y: -0.27}
   row: 6
-  col: 13
+  col: 23
 --- !u!114 &1002959489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1409,7 +1409,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 619394802}
+  - {fileID: 634132596}
   - {fileID: 163243002}
   - {fileID: 1383183530}
-  - {fileID: 634132596}
   - {fileID: 4451631545869072350}
